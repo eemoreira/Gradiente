@@ -70,31 +70,12 @@ def cv_scharr(image):
     Gy = cv2.Scharr(image, cv2.CV_64F, 0, 1)
     return Gx, Gy
 
-def gradient_magnitude(Gx, Gy):
-    n = Gx.shape[0]
-    m = Gx.shape[1]
-    ans = np.zeros((n, m))
-    for i in range(n):
-        for j in range(m):
-            ans[i, j] = np.sqrt(Gy[i, j] * Gy[i, j] + Gx[i, j] * Gx[i, j])
-    return ans
-
 EPS = 1e-8
-
-def gradient_direction(Gx, Gy):
-    n = Gx.shape[0]
-    m = Gx.shape[1]
-    ans = np.zeros((n, m))
-    for i in range(n):
-        for j in range(m):
-            ans[i, j] = np.arctan2(Gy[i, j], (Gx[i, j] + EPS))
-    return ans
-
-def cv_gradient_magnitude(Gx, Gy):
+def gradient_magnitude(Gx, Gy):
     return np.sqrt(Gx**2 + Gy**2)
 
-def cv_gradient_direction(Gx, Gy):
-    return np.arctan2(Gy, Gx)
+def gradient_direction(Gx, Gy):
+    return np.arctan2(Gy, Gx + EPS)
 
 def contour(K, direction, magnitude):
     n, m = direction.shape
@@ -139,7 +120,7 @@ def apply_contour(filtered_image, contorno, contorno_CV, name):
 
     plt.savefig(f'{name}_contornos.png')
 
-K = 1.1
+K = 1.5
 
 for image_name in images:
     filtered_image = filter_image(image_name)
@@ -152,8 +133,8 @@ for image_name in images:
         direction = gradient_direction(Gx, Gy)
         contour_mask = contour(K, direction, magnitude)
 
-        cv_magnitude = cv_gradient_magnitude(cv_Gx, cv_Gy)
-        cv_direction = cv_gradient_direction(cv_Gx, cv_Gy)
+        cv_magnitude = gradient_magnitude(cv_Gx, cv_Gy)
+        cv_direction = gradient_direction(cv_Gx, cv_Gy)
         cv_contour_mask = contour(K, cv_direction, cv_magnitude)
 
         apply_contour(filtered_image, contour_mask, cv_contour_mask, f"{image_name[:-4]}_{filter_name}")
