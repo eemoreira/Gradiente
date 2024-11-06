@@ -24,8 +24,6 @@ def convolution(image, kernel):
             filtered_image[i, j] = np.sum(region * kernel)
     return filtered_image
 
-images = ['insetoGray.png', 'moedas.png', 'Lua1_gray.jpg',
-          'chessboard_inv.png', 'img02.jpg']
 
 def filter_image(image):
     to = plt.imread(image)
@@ -105,10 +103,12 @@ def apply_contour(filtered_image, contorno, name):
 
     plt.savefig(f'{name}_From_Scratch.png')
 
+images = ['insetoGray.png', 'moedas.png', 'Lua1_gray.jpg',
+          'chessboard_inv.png', 'img02.jpg']
 K = 1.1
 
 for image_name in images:
-    filtered_image = filter_image(image_name)
+    filtered_image = filter_image(f'img/{image_name}')
     filtered_image = filtered_image.astype(float)
     for filter_name, gradient_func in zip(["Prewitt", "Sobel", "Scharr"], [prewitt, sobel, scharr]):
         Gx, Gy = gradient_func(filtered_image)

@@ -123,7 +123,7 @@ def apply_contour(filtered_image, contorno, contorno_CV, name):
 K = 1.5
 
 for image_name in images:
-    filtered_image = filter_image(image_name)
+    filtered_image = filter_image(f'img/{image_name}')
     filtered_image = filtered_image.astype(float)
     for filter_name, gradient_func, cv_gradient_func in zip(["Prewitt", "Sobel", "Scharr"], [prewitt, sobel, scharr], [cv_prewitt, cv_sobel, cv_scharr]):
         Gx, Gy = gradient_func(filtered_image)
