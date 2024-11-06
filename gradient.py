@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import cv2
+from skimage.metrics import structural_similarity as get_ssim
 
 def gaussian_kernel(size, sigma=1):
     kernel = np.fromfunction(
@@ -106,6 +107,10 @@ def apply_contour(filtered_image, contorno, contorno_CV, name):
     cv_output_image = np.zeros_like(filtered_image, dtype=int)
     cv_output_image = np.where(contorno_CV == True, 255, 0)
 
+    ssim = get_ssim(my_output_image,cv_output_image,data_range=255)
+
+    plt.suptitle(f"SSIM: {ssim:.4f}", fontsize=16)
+
     plt.subplot(1, 3, 1)
     plt.title("Original")
     plt.imshow(filtered_image, cmap='gray')
@@ -120,10 +125,10 @@ def apply_contour(filtered_image, contorno, contorno_CV, name):
 
     plt.savefig(f'{name}_contornos.png')
 
-K = 1.5
+K = 1.1
 
 for image_name in images:
-    filtered_image = filter_image(f'img/{image_name}')
+    filtered_image = filter_image(image_name)
     filtered_image = filtered_image.astype(float)
     for filter_name, gradient_func, cv_gradient_func in zip(["Prewitt", "Sobel", "Scharr"], [prewitt, sobel, scharr], [cv_prewitt, cv_sobel, cv_scharr]):
         Gx, Gy = gradient_func(filtered_image)
