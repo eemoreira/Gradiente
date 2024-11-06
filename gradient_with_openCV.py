@@ -68,7 +68,7 @@ images = ['insetoGray.png', 'moedas.png', 'Lua1_gray.jpg', 'chessboard_inv.png',
 K = 1.1
 
 for image_name in images:
-    image = cv2.imread(f'img/{image_name}', cv2.IMREAD_GRAYSCALE)
+    image = cv2.imread(image_name, cv2.IMREAD_GRAYSCALE)
     filtered_image = apply_gaussian_filter(image, kernel_size=5, sigma=1)
 
     for filter_name, gradient_func in zip(["Prewitt", "Sobel", "Scharr"], [prewitt, sobel, scharr]):
